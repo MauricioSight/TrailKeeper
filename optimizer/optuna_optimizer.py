@@ -1,6 +1,6 @@
 import logging
 import optuna
-from tuning.base_optimizer import BaseOptimizer
+from optimizer.base_optimizer import BaseOptimizer
 from utils.experiment_io import get_run_dir
 
 class OptunaOptimizer(BaseOptimizer):
@@ -60,21 +60,8 @@ class OptunaOptimizer(BaseOptimizer):
 
         storage = self.run_dir / "optuna.db"
         storage = "sqlite:///" + str(storage)
-        study = optuna.create_study(study_name=self.run_id, directions=[self.direction, 'minimize'], sampler=self._get_sampler(), 
+        study = optuna.create_study(study_name=self.run_id, direction=self.direction, sampler=self._get_sampler(), 
                                     storage=storage, load_if_exists=True)
 
-        # study.enqueue_trial({"feature-window_size": 2})
-        # study.enqueue_trial({"feature-window_size": 4})
-        # study.enqueue_trial({"feature-window_size": 8})
-        # study.enqueue_trial({"feature-window_size": 16})
-        # study.enqueue_trial({"feature-window_size": 32})
-        # study.enqueue_trial({"feature-window_size": 64})
-        # study.enqueue_trial({"feature-window_size": 128})
-        # study.enqueue_trial({"feature-window_size": 192})
-        # study.enqueue_trial({"feature-window_size": 256})
-        # study.enqueue_trial({"feature-window_size": 320})
-        # study.enqueue_trial({"feature-window_size": 384})
-        # study.enqueue_trial({"feature-window_size": 448})
-        # study.enqueue_trial({"feature-window_size": 512})
         study.optimize(wrapped_objective, n_trials=self.n_trials)
         return study.best_trial
