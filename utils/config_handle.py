@@ -4,7 +4,7 @@ import yaml
 
 from utils.experiment_io import get_run_dir
 
-def load_config(config_name=None, default_file_name="train_config", run_id=None):
+def load_config(config_name=None, default_file_name="config", run_id=None):
     parser = argparse.ArgumentParser(description='Execute train validation step')
     parser.add_argument('--config', required=False, help='YAML File containing the configs')
     parser.add_argument('--run_id', required=False, help='Run ID for the experiment')

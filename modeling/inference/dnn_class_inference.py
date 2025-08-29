@@ -35,6 +35,7 @@ class DNNClassInference(PytorchInference):
         g.manual_seed(42)
         
         data = [[X[i], y.iloc[i]['label'], i] for i in range(X.shape[0])]
+        self.logger.info(f"Testing labels: \n{y['label'].value_counts()}")
         data_loader = create_loader(data, None, batch_size, self.device, g)
 
         with torch.no_grad():

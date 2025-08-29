@@ -1,10 +1,8 @@
 import json
+import numpy as np
 import yaml
 from datetime import datetime
 from pathlib import Path
-
-import torch
-import pandas as pd
 
 def search_tune_id(train_config, tune_config):
     base_runs_dir = Path("runs")
@@ -17,7 +15,7 @@ def search_tune_id(train_config, tune_config):
         if not run_dir.is_dir():
             continue
         
-        train_config_path = run_dir / "train_config.yaml"
+        train_config_path = run_dir / "config.yaml"
         tune_config_path = run_dir / "tune_config.yaml"
         
         if not train_config_path.exists() or not tune_config_path.exists():
@@ -85,7 +83,7 @@ def generate_run_id(keys) -> str:
     run_id = "_".join(keys) + f"_{timestamp}"
     return run_id
 
-def get_run_id(config: dict, keys, default_file_name: str = 'train_config') -> str:
+def get_run_id(config: dict, keys, default_file_name: str = 'config') -> str:
     run_id = search_run_id(config, default_file_name)
 
     if run_id is None:
@@ -112,13 +110,12 @@ def save_run_artifacts(run_dir, config, y_true = None, y_scores = None, metrics 
     run_dir.mkdir(parents=True, exist_ok=True)
 
     # Save config
-    with open(run_dir / f"{config['phase']}_config.yaml", "w") as f:
+    with open(run_dir / f"config.yaml", "w") as f:
         yaml.dump(config, f)
 
     # Save y_true and predictions
     if y_true is not None and y_scores is not None:
-        df = pd.DataFrame({"y_true": y_true, "y_scores": y_scores})
-        df.to_csv(run_dir / f"{config['phase']}_labels_predictions.csv", index=False)
+        np.savez(run_dir / f"{config['phase']}_labels_predictions.npz", y_true=y_true, y_scores=y_scores)
 
     # Save metrics
     if metrics is not None:
@@ -145,5 +142,5 @@ def save_run_tune(run_dir, tune_config: dict, train_config: dict):
     with open(run_dir / "tune_config.yaml", "w") as f:
         yaml.dump(tune_config, f)
 
-    with open(run_dir / "train_config.yaml", "w") as f:
+    with open(run_dir / "config.yaml", "w") as f:
         yaml.dump(train_config, f)

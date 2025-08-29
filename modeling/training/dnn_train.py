@@ -10,6 +10,7 @@ from modeling.training.pytorch_base import PytorchTrainingAlgorithm
 from modeling.structure.pytorch_base import PytorchModelStructure
 from utils.create_loader import create_loader
 from utils.criterion import get_criterion
+from utils.seed_all import DEFAULT_SEED
 
 
 class DNNTrain(PytorchTrainingAlgorithm):
@@ -84,7 +85,7 @@ class DNNTrain(PytorchTrainingAlgorithm):
     def __create_loaders(self, X: np.ndarray, y: pd.DataFrame) -> tuple[DataLoader, DataLoader]:
         idx = np.arange(X.shape[0])
 
-        train_idx, val_idx = train_test_split(idx, train_size=0.8, random_state=10, shuffle=True)
+        train_idx, val_idx = train_test_split(idx, train_size=0.8, random_state=DEFAULT_SEED, shuffle=True)
 
         self.logger.info(f"Train size: {len(train_idx)}, Validation size: {len(val_idx)}")
 
@@ -92,8 +93,8 @@ class DNNTrain(PytorchTrainingAlgorithm):
         train_df = pd.DataFrame([y.iloc[i]['label'] for i in train_idx], columns=['label'])
         val_df = pd.DataFrame([y.iloc[i]['label'] for i in val_idx], columns=['label'])
 
-        self.logger.info(f"\nTrain labels: \n{train_df['label'].value_counts()}")
-        self.logger.info(f"\nValidation labels: \n{val_df['label'].value_counts()}")
+        self.logger.info(f"Train labels: \n{train_df['label'].value_counts()}")
+        self.logger.info(f"Validation labels: \n{val_df['label'].value_counts()}")
 
         data = [[X[i], y.iloc[i]['label'], i] for i in range(X.shape[0])]
 
@@ -127,7 +128,7 @@ class DNNTrain(PytorchTrainingAlgorithm):
         num_epochs      =   self.config.get('modeling', {}).get('training', {}).get('num_epochs')
         es_patience     =   self.config.get('modeling', {}).get('training', {}).get('early_stopping_patience')
 
-        self.optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate)
+        self.optimizer = torch.optim.Adam(model.parameters(), lr=float(learning_rate))
         self.criterion = get_criterion(criterion_name, reduction=reduction)
 
         early_stopping = None
@@ -137,7 +138,7 @@ class DNNTrain(PytorchTrainingAlgorithm):
 
         train_loader, val_loader = self.__create_loaders(X, y)
 
-        self.logger.info(f"\nRunning for {num_epochs} epochs")
+        self.logger.info(f"Running for {num_epochs} epochs")
         self.logger.info(f"-------------------- Training started -------------------")
         for epoch in range(num_epochs):
             train_loss = self.fit(model, train_loader, epoch)

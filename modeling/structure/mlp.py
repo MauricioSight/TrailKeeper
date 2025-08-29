@@ -7,8 +7,8 @@ class MLP(PytorchModelStructure):
     def __init__(self, config: dict, logger: Logger, device: TorchDevice):
         super(MLP, self).__init__(config, logger, device)
 
-        input_size = config.get('modeling', {}).get('structure', {}).get('input_size')
-        num_layers = config.get('modeling', {}).get('structure', {}).get('num_layers')
+        input_size  = config.get('modeling', {}).get('structure', {}).get('input_size')
+        num_layers  = config.get('modeling', {}).get('structure', {}).get('num_layers')
         hidden_size = config.get('modeling', {}).get('structure', {}).get('hidden_size')
         output_size = config.get('modeling', {}).get('structure', {}).get('output_size')
 

@@ -26,7 +26,7 @@ class MultiClassificationMetrics(InferenceMetrics):
         """
 
         y_pred = np.argmax(y_scores, axis=1)
-        y_prob = torch.tensor(y_scores).softmax(dim=1).cpu().numpy()
+        y_prob = torch.tensor(np.array(y_scores)).softmax(dim=1).cpu().numpy()
 
         acc = accuracy_score(y_true, y_pred)
         f1_macro = f1_score(y_true, y_pred, average='macro')
@@ -48,7 +48,7 @@ class MultiClassificationMetrics(InferenceMetrics):
         )
         plt.title("Confusion Matrix")
         plt.tight_layout()
-        plt.savefig(run_dir / "confusion_matrix.png", dpi=200)  # or .pdf / .svg
+        plt.savefig(run_dir / f"{self.config.get('phase')}_confusion_matrix.png", dpi=200)  # or .pdf / .svg
         plt.close()
 
         return {
