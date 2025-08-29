@@ -14,6 +14,11 @@ class ModelingStructureFactory:
             from modeling.structure.mlp import MLP
 
             return MLP(config, logger, device)
+        
+        if name == 'cnn':
+            from modeling.structure.cnn import CNN
+
+            return CNN(config, logger, device)
 
         else:
             raise ValueError(
