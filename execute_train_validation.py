@@ -33,7 +33,7 @@ def main(config=None, X=None, y_true=None):
     """
 
     if config is None:
-        config = load_config(default_file_name="cnn")
+        config = load_config(default_file_name="mlp")
 
     if 'run_id' not in config:
         run_id = get_run_id(config, [config['modeling']['structure']['name'], config['data_loader']['name']])
