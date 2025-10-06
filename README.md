@@ -153,6 +153,19 @@ This pattern makes the workflow:
 
 ## Getting Started
 
+### Quickstart with Google Colab (optional)
+
+If you’d like to try TrailKeeper without installing anything locally, open the **Getting Started Colab Notebook**:
+
+[Open in Colab](https://drive.google.com/file/d/1YUMEYgJNv0tMkfVUiWRls2bWsRUMH3jJ/view?usp=sharing)
+
+This notebook will guide you through:
+
+* Installing TrailKeeper
+* Running your first experiment with configs
+* Tracking results and metrics
+
+
 ### 1. Installation
 
 Clone the repository:
