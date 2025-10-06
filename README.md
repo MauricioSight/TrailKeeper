@@ -44,8 +44,96 @@ optimizer/         # Base + Optuna optimizers
 runs/              # Saved experiment runs
 tracker/           # Experiment tracking (base + W&B)
 utils/             # Helpers (config, device, IO, etc.)
-wandb/             # W&B integration scripts
 ```
+
+## Workflow Pattern
+
+TrailKeeper organizes experiments following a **pattern** that structures the ML experimentation e into modular, traceable components.
+
+The diagram below illustrates the pattern:
+
+![Workflow Pattern](docs/images/workflow_pattern.png)
+
+Each block of the workflow maps directly to components in the codebase:
+
+### 1. Data Loader
+
+* **Purpose**: Load raw datasets into the pipeline.
+* **Code**: `data_loader/`
+* **Examples**: `MNISTLoader`, `CustomLoader`.
+* **Pattern Link**: Multiple loaders can be swapped in without changing the rest of the pipeline.
+
+---
+
+### 2. Data Pre-processing
+
+* **Purpose**: Clean, transform, and prepare data before training.
+* **Code**: `data_pre_processing/`
+* **Examples**: normalization, augmentation, feature selection.
+* **Pattern Link**: Supports caching so repeated runs don’t redo preprocessing unnecessarily.
+
+---
+
+### 3. Data Modeling
+
+* **Purpose**: Define model structure and training algorithm.
+* **Code**: `modeling/`
+
+  * `structure/` → Model definitions (MLP, CNN, etc.)
+  * `training/` → Training logic and loop.
+* **Pattern Link**: Separation of structure and training improves modularity.
+
+---
+
+### 4. Validation
+
+* **Purpose**: Run inference on validation data, define thresholds, compute metrics.
+* **Code**:
+
+  * `metrics/` → Evaluation functions (accuracy, F1, etc.)
+  * `modeling/inference.py` → Inference utilities.
+* **Pattern Link**: Validation provides feedback for optimizer and config tuning.
+
+---
+
+### 5. Test
+
+* **Purpose**: Final evaluation on held-out test data.
+* **Code**:
+
+  * `metrics/`
+  * `modeling/inference.py`
+* **Pattern Link**: Produces final metrics for comparison and reproducibility.
+
+---
+
+### 6. Optimizer
+
+* **Purpose**: Automate hyperparameter tuning and experiment search.
+* **Code**: `optimizer/` (supports Optuna and custom optimizers).
+* **Pattern Link**: Feeds configs into the workflow and integrates results from validation.
+
+---
+
+### 7. Tracking & Artifacts
+
+* **Purpose**: Store and track all results for reproducibility.
+* **Code**:
+
+  * `logger/` → Local logging utilities.
+  * `tracker/` → Integrations with W&B.
+  * `runs/` → Saved configs, logs, metrics, predictions, model weights.
+* **Pattern Link**: Guarantees traceability across experiments.
+
+---
+
+### Key Idea
+
+This pattern makes the workflow:
+
+* **Modular** → Swap datasets, models, or metrics easily.
+* **Traceable** → Logs, configs, and artifacts track every run.
+* **Reproducible** → Any run can be reproduced from its saved config and artifacts.
 
 ---
 
