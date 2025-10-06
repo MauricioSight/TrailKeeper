@@ -46,6 +46,20 @@ tracker/           # Experiment tracking (base + W&B)
 utils/             # Helpers (config, device, IO, etc.)
 ```
 
+---
+
+## Design Principles
+
+TrailKeeper is inspired by **SOLID design principles**:
+
+* **S**ingle Responsibility → Clear separation of concerns
+* **O**pen/Closed → Easy to extend with new components
+* **L**iskov Substitution → Interchangeable modules
+* **I**nterface Segregation → Minimal, focused interfaces
+* **D**ependency Inversion → Flexible architecture
+
+---
+
 ## Workflow Pattern
 
 TrailKeeper organizes experiments following a **pattern** that structures the ML experimentation e into modular, traceable components.
@@ -194,18 +208,6 @@ TrailKeeper integrates with **Weights & Biases** [W&B](https://github.com/Mauric
 * Track metrics in real-time
 * Compare experiments
 * Reproduce runs with saved configs and logs
-
----
-
-## Design Principles
-
-TrailKeeper is inspired by **SOLID design principles**:
-
-* **S**ingle Responsibility → Clear separation of concerns
-* **O**pen/Closed → Easy to extend with new components
-* **L**iskov Substitution → Interchangeable modules
-* **I**nterface Segregation → Minimal, focused interfaces
-* **D**ependency Inversion → Flexible architecture
 
 ---
 
